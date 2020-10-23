@@ -176,6 +176,7 @@
 </template>
 
 <script>
+import { db } from '~/plugins/firebaseConfig.js'
 export default {
   data() {
     return {
@@ -202,14 +203,14 @@ export default {
     }
   },
   methods: {
-    reset() {
-      this.$refs.form.reset()
-    },
     validate() {
       this.$refs.form.validate()
     },
+    reset() {
+      this.$refs.form.reset()
+    },
     set() {
-      this.arr = {
+      const data = {
         nmovie: this.nmovie,
         cinema: this.cinema,
         email: this.email,
@@ -218,16 +219,13 @@ export default {
         time: this.time,
         numpeo: this.numpeo,
         seat: this.seat,
-        address: {
-          add: this.add,
-          district: this.district,
-          province: this.province,
-        },
-        description: this.description,
-        district: this.district,
-        province: this.province,
       }
-      this.$store.commit('set_arr', this.arr)
+      db.collection('Movie')
+        .doc()
+        .set(data)
+        .then(function () {
+          console.log('Document successfully written! -> data')
+        })
     },
   },
 }
